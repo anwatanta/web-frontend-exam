@@ -9,26 +9,25 @@ const viewBoxMap = {
 
 const props = defineProps({
   name: { type: String, required: true },
-  size: { type: [Number, String], default: '1em' },
 })
 </script>
 
 <template>
   <svg
     v-if="viewBoxMap[name]"
-    :width="size"
-    :height="size"
+    width="1em"
+    height="1em"
     :viewBox="viewBoxMap[name]"
     aria-hidden="true"
-    class="inline-block align-middle transition-colors"
+    class="inline-block"
   >
     <use :href="`#icon-${name}`" />
   </svg>
 
   <span
     v-else
-    class="inline-block rounded bg-red-700 align-middle"
-    :style="{ width: '1em', height: '1em' }"
+    class="inline-block bg-red-700"
+    style="width: 1em; height: 1em"
     :title="`[AppIcon] 找不到 icon: ${name}`"
   />
 </template>
