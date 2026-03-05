@@ -60,4 +60,21 @@
   --text-34: 2.125rem; /* 34px */
   --text-40: 2.5rem; /* 40px */
   --text-48: 3rem; /* 48px */
+
+  --animate-text-loop: text-loop 1.5s ease-in-out infinite;
+  @keyframes text-loop {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+  }
+}
+
+@layer base {
+  body {
+    line-height: 1.25;
+  }
 }

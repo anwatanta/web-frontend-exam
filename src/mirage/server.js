@@ -1,8 +1,8 @@
 import { createServer } from 'miragejs'
 
-import { educationLevelList } from './data/educationLevelList'
-import { jobs } from './data/jobs'
-import { salaryLevelList } from './data/salaryLevelList'
+import educationList from './data/educationList'
+import jobList from './data/jobList'
+import salaryList from './data/salaryList'
 
 function filterJobs(data, companyName, educationLevel, salaryLevel) {
   let result = data
@@ -35,7 +35,7 @@ export function makeServer({ environment = 'development' } = {}) {
         const prePage = Number(request.queryParams.pre_page)
         const page = Number(request.queryParams.page)
 
-        const listItems = jobs.map(({ companyPhoto, description, ...rest }) => rest)
+        const listItems = jobList.map(({ companyPhoto, description, ...rest }) => rest)
         const filtered = filterJobs(listItems, companyName, educationLevel, salaryLevel)
 
         if (!Number.isNaN(prePage) && !Number.isNaN(page) && prePage > 0 && page > 0) {
@@ -53,11 +53,11 @@ export function makeServer({ environment = 'development' } = {}) {
         }
       })
 
-      this.get('/educationLevelList', () => educationLevelList)
-      this.get('/salaryLevelList', () => salaryLevelList)
+      this.get('/educationLevelList', () => educationList)
+      this.get('/salaryLevelList', () => salaryList)
 
       this.get('/jobs/:id', (_schema, request) => {
-        const data = jobs.find((item) => item.id === request.params.id)
+        const data = jobList.find((item) => item.id === request.params.id)
 
         if (!data) return []
 
