@@ -134,12 +134,12 @@ onUnmounted(() => {
   <div class="min-h-screen bg-linear-to-r from-[#868686] to-[#5C5C5C] pb-3 md:pb-7">
     <!-- ===== Hero Section ===== -->
     <section
-      class="max-h-[238px] overflow-hidden bg-[url('@/assets/image/bg.png')] bg-cover bg-top md:h-[58vw] md:max-h-[823px]"
+      class="max-h-[238px] overflow-hidden bg-[url('@/assets/image/bg.png')] bg-cover bg-top md:max-h-[823px]"
     >
       <div class="mx-auto max-w-[1440px]">
         <div class="relative flex max-w-[317px] md:max-w-[1097px]">
           <!-- Character with eye tracking -->
-          <div ref="characterRef" class="relative w-full">
+          <div ref="characterRef" class="relative w-[70vw]">
             <img
               src="@/assets/image/character.png"
               alt="character"
@@ -174,7 +174,7 @@ onUnmounted(() => {
           <img
             src="@/assets/image/loop-text.png"
             alt="logo"
-            class="animate-text-loop absolute top-[50%] left-[75%] w-full max-w-[137px] object-contain md:max-w-[540px]"
+            class="animate-text-loop absolute inset-x-0 top-[50%] mx-auto w-[28vw] max-w-[137px] translate-x-[80%] object-contain md:max-w-[500px]"
             draggable="false"
           />
         </div>
@@ -183,7 +183,7 @@ onUnmounted(() => {
 
     <!-- ===== Job List Section ===== -->
     <section
-      class="isolate border-y border-gray-500 bg-gray-100 p-4 shadow-[2px_2px_4px_0_rgba(0,0,0,0.25)] md:mx-7 md:-mt-[120px] md:rounded-xl md:border md:p-6"
+      class="isolate border-y border-gray-500 bg-gray-100 p-4 shadow-[2px_2px_4px_0_rgba(0,0,0,0.25)] md:mx-7 md:-mt-[8%] md:rounded-xl md:border md:p-6"
     >
       <!-- Section title -->
       <h2
