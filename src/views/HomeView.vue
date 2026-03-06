@@ -175,7 +175,6 @@ onUnmounted(() => {
             type="text"
             placeholder="請輸入公司名稱"
             class="text-16 placeholder:text-gray-1000 h-14 rounded-sm border border-gray-500 px-3 focus:outline-none"
-            @keydown.enter="applySearch"
           />
         </div>
 
