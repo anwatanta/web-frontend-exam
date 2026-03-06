@@ -174,7 +174,7 @@ onUnmounted(() => {
           <img
             src="@/assets/image/loop-text.png"
             alt="logo"
-            class="animate-text-loop absolute inset-x-0 top-[50%] mx-auto w-[28vw] max-w-[137px] translate-x-[80%] object-contain md:max-w-[500px]"
+            class="animate-text-loop absolute inset-x-0 top-[50%] mx-auto w-[25vw] max-w-[137px] translate-x-[120%] object-contain md:max-w-[500px]"
             draggable="false"
           />
         </div>
