@@ -1,167 +1,151 @@
-# Frontend Engineer Exam
+# Web Frontend Exam — Vue
 
-這是一份 Yile 前端工程師的徵才專案，會需根據規則及設計檔完成頁面需求。
+本專案為 Yile 前端工程師徵才作業，根據 Figma 設計稿實作職缺列表與詳細資訊頁面。
 
-## ⭐️ 需求
+🔗 **線上展示**：[https://anwatanta.github.io/web-frontend-exam/](https://anwatanta.github.io/web-frontend-exam/)
 
-### 框架
+---
 
-1. 語言：Javascript
-2. Framework：
-   1. 建議使用 React.js / Next.js，使用 Vue.js 亦可接受
+## 如何執行此專案
 
-### CSS
+### 環境需求
 
-可以選擇以下其一或者搭配做為使用
+- Node.js `^20.19.0` 或 `>=22.12.0`
+- npm
 
-1. [Material UI](https://mui.com/material-ui/)
-2. [Sass](https://sass-lang.com/)
-3. [Tailwindcss](https://tailwindcss.com/)
+### 安裝與啟動
 
-### Coding Style
+```bash
+# 1. 安裝依賴
+npm install
 
-採用 [Google Coding Style](https://google.github.io/styleguide/) 或 [Airbnb Style](https://github.com/airbnb/javascript)，我們將會審查你的程式碼是否符合風格規範
+# 2. 啟動開發伺服器
+npm run dev
+```
 
-## 📝 實作描述
+開啟瀏覽器前往 `http://localhost:5173`
 
-- 請 Fork 此專案做開發
-- 根據 [Figma](https://www.figma.com/file/VcTqAK0x3JBi9nMvqN9YXJ/Web-Frontend-Developer-Exam?type=design&node-id=0%3A1&mode=design&t=EAnp3AAU1aqJ66e2-1) 實作頁面，請 `登入` 帳號才可看到實作細節
-- 若有任何優化、更好方式請自由發揮，但確保基本功能皆有達成需求
+### 打包
 
-## ✅ 提交說明
+```bash
+npm run build
+```
 
-1. 請將專案上傳至 Github，提交 Repositories 連結給HR，我們將會閱讀你的程式碼
-2. 請提供一份 README 文件說明
-   1. 如何執行此專案
-   2. 專案架構、邏輯說明
-   3. 專案遇到的困難、問題及解決方法
-3. 請回傳給HR，內容需包含 Github Repositories Link
+輸出至 `dist/` 目錄。
 
-## 🥇 加分項目
+### 程式碼檢查
 
-- 加載資料時的過渡表現
-- 細節動畫表現
-- 部署至任一平台以供成果檢視，例如：Heroku、AWS S3、GCS、Github Page …… 等
+```bash
+npm run lint
+```
 
-## ⚙️ API
+---
 
-### Job List [GET] `/api/v1/jobs`
+## 專案架構
 
-工作列表
+```
+src/
+├── assets/
+│   ├── main.css          # 全域樣式（含 Tailwind 匯入與自訂 CSS 變數）
+│   ├── icon/             # SVG 圖示
+│   └── image/            # 頁面用圖片（人物、背景、旋轉文字）
+├── components/
+│   ├── AppIcon.vue       # 通用 SVG 圖示元件
+│   ├── JobCard.vue       # 職缺卡片元件
+│   ├── JobDetailModal.vue # 職缺詳細資訊 Modal（含輪播）
+│   └── icons/
+│       └── SvgSprite.vue # SVG Sprite 定義
+├── mirage/
+│   ├── server.js         # MirageJS Mock API Server 設定
+│   └── data/
+│       ├── jobList.js    # 職缺假資料
+│       ├── educationList.js
+│       └── salaryList.js
+├── router/
+│   └── index.js          # Vue Router 路由設定
+├── stores/
+│   └── jobs.js           # Pinia Store（職缺列表狀態與 API 呼叫）
+├── views/
+│   └── HomeView.vue      # 首頁（Hero + 篩選器 + 職缺列表 + 分頁）
+├── App.vue
+└── main.js
+```
 
-**Parameter**
+### 技術選型
 
-| Name | Description |
-| ---------------- | -------------- |
-| pre_page         | 每頁顯示筆數     |
-| page             | 指定頁面頁數     |
-| company_name     | 公司名稱        |
-| education_level  | 教育程度 id     |
-| salary_level     | 薪資範圍 id     |
+| 項目 | 技術 |
+|------|------|
+| 框架 | Vue 3 (Composition API) |
+| 建置工具 | Vite |
+| 樣式 | Tailwind CSS v4 |
+| 狀態管理 | Pinia |
+| 路由 | Vue Router |
+| Mock API | MirageJS |
+| 部署 | GitHub Pages（GitHub Actions 自動部署） |
 
-**Response**
+### 資料流邏輯
 
-```json
-{
-  "data": [
-    {
-      "id": "1",
-      "companyName": "立刻科技",
-      "jobTitle": "資深前端工程師",
-      "educationId": 4,
-      "salaryId": 3,
-      "preview": "招募經驗豐富的前端工程師，共創卓越網頁體驗！",
-    }
-  ],
-  "total": 1
+1. **Mock API**：使用 MirageJS 攔截所有 `fetch` 請求，模擬後端 API（`/api/v1/jobs`、`/api/v1/educationLevelList`、`/api/v1/salaryLevelList`）。
+2. **Pinia Store（`jobs.js`）**：集中管理職缺列表、分頁（`currentPage`、`perPage`）、篩選條件（`filters`）、載入狀態（`loading`）。提供 `setPage()`、`setFilters()`、`setPerPage()` 方法，每次呼叫都會重新打 API 取得資料。
+3. **HomeView**：掛載時同時呼叫 `fetchFilterOptions()`（取得教育程度、薪資清單）與 `store.setPerPage()`（依螢幕寬度決定每頁數量）。篩選器變更後呼叫 `store.setFilters()`，頁碼自動重設為第 1 頁。
+4. **JobDetailModal**：接收 `jobId` prop，透過 `watch` 監聽變化，有值時打 `/api/v1/jobs/:id` 取得詳細資料。
+
+---
+
+## 專案遇到的困難、問題及解決方法
+
+### 1. 部署後 API 全部回傳 404
+
+**問題**：MirageJS 只在開發模式啟動（`if (import.meta.env.DEV)`），打包後 mock server 不存在，所有 API 呼叫都打到 GitHub Pages，回傳 404 HTML，導致 `SyntaxError: Unexpected token '<'`。
+
+**解決**：移除 DEV 條件判斷，讓 MirageJS 在所有環境（包含 production build）都正常運作。
+
+```js
+// 修改前
+if (import.meta.env.DEV) {
+  makeServer()
 }
+
+// 修改後
+makeServer()
 ```
 
 ---
 
-### Education Level List [GET] `/api/v1/educationLevelList`
+### 2. 部署後 CSS 回傳 404
 
-教育程度列表
+**問題**：`index.html` 中有一行 `<link href="/src/style.css" rel="stylesheet" />`，但專案並不存在此檔案（CSS 是透過 `main.js` 的 `import './assets/main.css'` 匯入），Vite 無法識別此路徑，也不會自動加上 base 前綴，導致瀏覽器嘗試載入 `/src/style.css` 而 404。
 
-**Response**
-
-```json
-[
-  {
-     "id": "1", "label": "國小"
-  },
-  {
-     "id": "2", "label": "國中"
-  },
-  {
-     "id": "3", "label": "高中"
-  },
-  {
-     "id": "4", "label": "大學"
-  },
-  {
-     "id": "5", "label": "碩士"
-  },
-  {
-     "id": "6", "label": "博士"
-  }
-]
-```
+**解決**：直接從 `index.html` 移除這行多餘的 link 標籤。
 
 ---
 
-### Salary Level List [GET] `/api/v1/salaryLevelList`
+### 3. 圖片輪播無縫循環
 
-薪資範圍列表
+**問題**：Modal 內的公司照片輪播，若直接以 index 對 5 張圖取模，切換到最後一張後再往下滑會有明顯跳回的視覺問題。
 
-**Response**
-
-```json
-[
-  {
-    "id": "1", "label": "待遇面議"
-  },
-  {
-    "id": "2", "label": "月薪 40,000 ~ 60,000 元"
-  },
-  {
-    "id": "3", "label": "月薪 70,000 ~ 100,000 元"
-  },
-  {
-    "id": "4", "label": "年薪 800,000 ~ 1,000,000 元"
-  },
-  {
-    "id": "5", "label": "年薪 800,000 ~ 1,500,000 元"
-  },
-  {
-    "id": "6", "label": "年薪 1,500,000 ~ 2,000,000 元"
-  },
-  {
-    "id": "7", "label": "年薪 2,000,000 ~ 2,500,000 元"
-  }
-]
-```
+**解決**：將原始圖片陣列複製一份並拼接（`[...images, ...images]`），讓使用者操作時滑入「複本」部分，感覺上是無縫的，實際 index 僅對原始長度取模。
 
 ---
 
-### Job [GET] `/api/v1/jobs/:id`
+### 4. 人物眼睛追蹤滑鼠
 
-單一工作資訊
+**問題**：Hero 區域的人物眼睛需要跟隨滑鼠移動，但眼睛偏移量若太大或直接用絕對座標計算，容易讓眼睛跑出眼眶。
 
-**Response**
+**解決**：計算滑鼠相對於人物中心的水平距離，除以固定係數後做 `Math.min` 限制最大偏移量，兩顆眼睛使用不同係數（`2` 和 `1`）模擬立體感。
 
-```json
-{
-  "id": "6",
-  "description": "<h1>貨運操作員</h1><h2>工作地點：公司總部 - 台北市</h2><h2>職責與要求</h2><ul><li>負責倉儲內的物品搬運、分裝、包裝及出貨作業，確保貨物的準確性和完整性。<br />遵循公司的作業流程和安全規範，保障倉庫內的工作環境。<br />與團隊成員合作，確保倉儲操作的順暢進行。<br />需具備基本的電腦操作能力，能使用相關SaaS系統進行庫存管理。<br />需要有良好的溝通協調能力，能有效地與其他部門合作，確保整體物流運作的協調性。<br />對倉儲物流行業有興趣，願意學習並接受公司提供的培訓。</li></ul><h2>資格</h2><ul><li>至少高中畢業，具備相關物流或倉儲操作經驗者優先考慮。<br />具有貨運相關證照者尤佳。<br />對工作積極負責，有良好的工作態度和團隊協作精神。<br />願意接受輪班工作，能夠適應倉儲作業的體力需求。</li></ul><h2>我們提供</h2><ul><li>充滿挑戰性的工作環境，與國際化的專業團隊一同合作。<br />完善的培訓體系，協助您提升相關技能和知識。<br />良好的晉升機會，公司快速發展將為您提供更多職涯發展空間。<br />公司福利包括勞健保、團體保險、員工餐飲補助等。</li></ul><p>如果您渴望挑戰自我，想要加入一個充滿活力和機會的團隊，請將您的履歷寄至 <a href=\"mailto:hr@jenjanlogistics.com\">hr@jenjanlogistics.com</a>，我們期待與您攜手共創物流行業的未來。<br /><br />【JenJan真站電商衛星倉儲物流】期待您的加入！</p>",
-  "companyPhoto": [
-    "https://picsum.photos/250/150",
-    "https://picsum.photos/250/150",
-    "https://picsum.photos/250/150",
-    "https://picsum.photos/250/150",
-    "https://picsum.photos/250/150"
-  ],
-  "jobTitle": "廚師助手",
-  "companyName": "餐飲樂活"
-}
-```
+---
+
+### 5. RWD 每頁筆數自動切換
+
+**問題**：手機版每頁顯示 4 筆、桌機版 6 筆，視窗大小改變時需要重新取資料。
+
+**解決**：監聽 `resize` 事件，比較新舊 `perPage` 值，只在實際改變時才呼叫 `store.setPerPage()`，避免多餘的 API 呼叫。
+
+---
+
+### 6. 手機版分頁按鈕數量限制
+
+**問題**：若職缺數量多，分頁按鈕會在手機螢幕上超出版面。
+
+**解決**：以 `computed` 計算 `visiblePages`，手機版最多顯示 6 個頁碼，以當前頁為中心向兩側展開，並處理接近首尾的邊界情況。
