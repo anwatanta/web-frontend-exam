@@ -254,7 +254,7 @@ onUnmounted(() => {
       </div>
 
       <!-- Loading -->
-      <div v-if="store.loading" class="flex h-full items-center justify-center md:h-[458px]">
+      <div v-if="store.loading" class="flex h-full items-center justify-center py-7 md:h-[458px]">
         <div
           class="border-gray-1000 h-10 w-10 animate-spin rounded-full border-4 border-t-transparent"
         />
