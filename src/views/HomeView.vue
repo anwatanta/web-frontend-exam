@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import AppIcon from '@/components/AppIcon.vue'
 import JobCard from '@/components/JobCard.vue'
 import JobDetailModal from '@/components/JobDetailModal.vue'
@@ -75,12 +75,41 @@ function closeModal() {
   document.body.style.overflow = ''
 }
 
+// --- Pagination pages (mobile max 6) ---
+const isMobile = ref(window.innerWidth < 768)
+
+const visiblePages = computed(() => {
+  const total = store.totalPages
+  const current = store.currentPage
+  const maxMobile = 6
+
+  if (!isMobile.value || total <= maxMobile) {
+    return Array.from({ length: total }, (_, i) => i + 1)
+  }
+
+  const half = Math.floor(maxMobile / 2)
+  let start = current - half
+  let end = current + half - 1
+
+  if (start < 1) {
+    start = 1
+    end = maxMobile
+  }
+  if (end > total) {
+    end = total
+    start = total - maxMobile + 1
+  }
+
+  return Array.from({ length: end - start + 1 }, (_, i) => start + i)
+})
+
 // --- Responsive perPage ---
 function getPerPage() {
   return window.innerWidth >= 768 ? 6 : 4
 }
 
 function handleResize() {
+  isMobile.value = window.innerWidth < 768
   const next = getPerPage()
   if (next !== store.perPage) {
     store.setPerPage(next)
@@ -105,7 +134,7 @@ onUnmounted(() => {
   <div class="min-h-screen bg-linear-to-r from-[#868686] to-[#5C5C5C] pb-3 md:pb-7">
     <!-- ===== Hero Section ===== -->
     <section
-      class="max-h-[238px] bg-[url('@/assets/image/bg.png')] bg-cover bg-top md:h-[58vw] md:max-h-[823px]"
+      class="max-h-[238px] overflow-hidden bg-[url('@/assets/image/bg.png')] bg-cover bg-top md:h-[58vw] md:max-h-[823px]"
     >
       <div class="mx-auto max-w-[1440px]">
         <div class="relative flex max-w-[317px] md:max-w-[1097px]">
@@ -185,13 +214,16 @@ onUnmounted(() => {
           >
           <select
             v-model="selectedEducation"
-            class="text-16 h-14 min-w-32 rounded-sm border border-gray-500 px-3 focus:outline-none"
+            class="text-16 h-14 min-w-32 appearance-none rounded-sm border border-gray-500 px-3 focus:outline-none"
           >
             <option value="">不限</option>
             <option v-for="edu in educationList" :key="edu.id" :value="edu.id">
               {{ edu.label }}
             </option>
           </select>
+          <div
+            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 after:h-0 after:w-0 after:border-t-[5px] after:border-r-[5px] after:border-l-[5px] after:border-t-gray-800 after:border-r-transparent after:border-l-transparent"
+          ></div>
         </div>
 
         <div class="relative flex w-1/5 flex-col gap-1">
@@ -201,13 +233,16 @@ onUnmounted(() => {
           >
           <select
             v-model="selectedSalary"
-            class="text-16 h-14 rounded-sm border border-gray-500 px-3 focus:outline-none"
+            class="text-16 h-14 appearance-none rounded-sm border border-gray-500 px-3 focus:outline-none"
           >
             <option value="">不限</option>
             <option v-for="sal in salaryList" :key="sal.id" :value="sal.id">
               {{ sal.label }}
             </option>
           </select>
+          <div
+            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 after:h-0 after:w-0 after:border-t-[5px] after:border-r-[5px] after:border-l-[5px] after:border-t-gray-800 after:border-r-transparent after:border-l-transparent"
+          ></div>
         </div>
 
         <button
@@ -249,19 +284,22 @@ onUnmounted(() => {
       </div>
 
       <!-- Pagination -->
-      <div v-if="store.totalPages > 1" class="mt-2.5 flex justify-center gap-1.5 md:mt-3">
+      <div
+        v-if="store.totalPages > 1"
+        class="mt-2.5 flex justify-center gap-1.5 select-none md:mt-3"
+      >
         <button
           :disabled="store.currentPage <= 1"
-          class="text-gray-1000 disabled:text-gray-700"
+          class="text-gray-1000 shrink-0 cursor-pointer disabled:cursor-auto disabled:text-gray-700"
           @click="store.setPage(store.currentPage - 1)"
         >
           <AppIcon name="chevron-left" class="text-[32px]" />
         </button>
 
         <button
-          v-for="p in store.totalPages"
+          v-for="p in visiblePages"
           :key="p"
-          class="text-14 text-gray-1000 flex h-8 w-8 items-center justify-center rounded-full"
+          class="text-14 text-gray-1000 flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full"
           :class="p === store.currentPage ? 'bg-gray-300' : 'bg-transparent'"
           @click="store.setPage(p)"
         >
@@ -270,7 +308,7 @@ onUnmounted(() => {
 
         <button
           :disabled="store.currentPage >= store.totalPages"
-          class="text-gray-1000 disabled:text-gray-700"
+          class="text-gray-1000 shrink-0disabled:cursor-auto cursor-pointer disabled:text-gray-700"
           @click="store.setPage(store.currentPage + 1)"
         >
           <AppIcon name="chevron-right" class="text-[32px]" />
