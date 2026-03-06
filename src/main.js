@@ -7,9 +7,7 @@ import App from './App.vue'
 import router from './router'
 import { makeServer } from './mirage/server'
 
-if (import.meta.env.DEV) {
-  makeServer()
-}
+makeServer()
 
 const app = createApp(App)
 
