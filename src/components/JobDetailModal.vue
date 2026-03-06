@@ -202,7 +202,9 @@ onUnmounted(() => {
           </div>
 
           <!-- Footer: close button -->
-          <div class="flex h-[52px] items-center justify-end border-t border-gray-500 px-2">
+          <div
+            class="flex h-[52px] shrink-0 items-center justify-end border-t border-gray-500 px-2"
+          >
             <button class="text-16 text-gray-1000 h-9 cursor-pointer px-3" @click="emit('close')">
               關閉
             </button>
